@@ -29,8 +29,4 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run tests
-        run: |
-          # Run all tests, including your new one
-          pytest -v test/unit/test_translator.py
-          # Or, to run all tests under test/ (recommended):
-          # pytest -v test
+        run: pytest -v test
