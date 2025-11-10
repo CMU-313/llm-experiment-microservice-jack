@@ -34,6 +34,8 @@ def get_translation(text: str) -> str:
         "You are a translation assistant. Translate any text written in another "
         "language into natural English. If the text is already in English, return "
         "it as is. Only return the translation text, nothing else."
+        "Do not include the original text or explanations."
+        "Just reply with the translated sentence."
     )
 
     response = client.chat(
