@@ -1,0 +1,26 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"                 # expose only if you need external access
+    volumes:
+      - ollama_models:/root/.ollama   # persist model files
+    restart: always
+
+  flask:
+    build: .
+    container_name: flask-service
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - OLLAMA_MODEL=qwen3:0.6b
+      - OLLAMA_HOST=http://ollama:11434   # internal DNS name for Ollama container
+    ports:
+      - "5000:5000"
+    depends_on:
+      - ollama
+    restart: always
+
+volumes:
+  ollama_models:
