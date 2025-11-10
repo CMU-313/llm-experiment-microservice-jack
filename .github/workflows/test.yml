@@ -2,9 +2,7 @@ name: Run Python Tests
 
 on:
   push:
-    branches: 
-      - main
-      - f25
+    branches: ['**']
   pull_request:
     branches: 
       - main
@@ -30,7 +28,4 @@ jobs:
 
       - name: Run tests
         run: |
-          # Run all tests, including your new one
-          pytest -v test/unit/test_translator.py
-          # Or, to run all tests under test/ (recommended):
-          # pytest -v test
+          pytest -v test
