@@ -39,12 +39,6 @@ def get_translation(text: str) -> str:
         ],
     )
     return response.message.content.strip()
-    # response = client.generate(
-    #     model=MODEL_NAME,
-    #     prompt=f"{context.strip()}\n\nInput: {text.strip()}\n\nOutput:",
-    # )
-
-    # return response["response"].strip()
 
 def get_language(text: str) -> str:
     """Detect the language name (in English) of a given text."""
@@ -70,12 +64,6 @@ def get_language(text: str) -> str:
         ],
     )
     return response.message.content.strip()
-    # response = client.generate(
-    #     model=MODEL_NAME,
-    #     prompt=f"{context.strip()}\n\nInput: {text.strip()}\n\nOutput:",
-    # )
-
-    # return response["response"].strip()
 
 def translate_content(post: str) -> tuple[bool, str]:
     """
