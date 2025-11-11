@@ -1,17 +1,22 @@
-FROM python:3.12
+# ---- Base Image ----
+FROM python:3.12-slim
 
-# Set working directory
+# ---- Working Directory ----
 WORKDIR /app
 
-# Copy requirements and install dependencies
+# ---- Dependencies ----
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the app
+# ---- Copy Source Code ----
 COPY . .
 
-# Expose the port Flask runs on
+# ---- Environment ----
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=production
+
+# ---- Expose Flask Port ----
 EXPOSE 5000
 
-# Run the Flask app
-CMD ["flask", "run", "--host=0.0.0.0"]
+# ---- Run with Gunicorn (production WSGI server) ----
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
