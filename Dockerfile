@@ -19,4 +19,4 @@ ENV FLASK_ENV=production
 EXPOSE 5000
 
 # ---- Run with Gunicorn (production WSGI server) ----
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "--timeout", "180", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
