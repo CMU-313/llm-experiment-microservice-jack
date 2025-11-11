@@ -79,7 +79,7 @@ def translate_content(post: str) -> tuple[bool, str]:
             return True, post
 
         translation = get_translation(post).strip()
-        if not translation or len(translation.split()) < 2:
+        if not translation or len(translation.split()) < 2 or "understand" in translation.lower():
             raise ValueError("Empty or malformed translation")
 
         return False, translation
