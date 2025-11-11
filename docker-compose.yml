@@ -5,10 +5,33 @@ services:
     image: ollama/ollama:latest
     container_name: ollama
     ports:
-      - "11434:11434"                 # expose only if you need external access
+      - "11434:11434"
     volumes:
-      - ollama_models:/root/.ollama   # persist model files
+      - ollama_models:/root/.ollama
     restart: always
+
+  ollama-init:
+    image: alpine:3.19
+    depends_on:
+      - ollama
+    volumes:
+      - ollama_models:/root/.ollama
+    entrypoint:
+      - sh
+      - -c
+      - |
+        apk add --no-cache wget > /dev/null
+        for i in $(seq 1 20); do
+          if wget -q --spider http://ollama:11434/api/tags; then
+            echo "Ollama server is ready, pulling model..."
+            wget -q --header="Content-Type: application/json" \
+                 --post-data='{"name":"qwen3:0.6b"}' \
+                 http://ollama:11434/api/pull -O /dev/null && exit 0
+          fi
+          echo "Waiting for Ollama to start... ($$i)"
+          sleep 3
+        done
+        echo "Ollama server did not start in time" && exit 1
 
   flask:
     build: .
@@ -17,11 +40,12 @@ services:
       - FLASK_APP=app.py
       - FLASK_ENV=production
       - OLLAMA_MODEL=qwen3:0.6b
-      - OLLAMA_HOST=http://ollama:11434   # internal DNS name for Ollama container
+      - OLLAMA_HOST=http://ollama:11434
     ports:
       - "5000:5000"
     depends_on:
       - ollama
+      - ollama-init
     restart: always
 
 volumes:
