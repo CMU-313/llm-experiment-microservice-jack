@@ -22,11 +22,11 @@ def get_translation(text: str) -> str:
     just reply with the translated sentence.
 
     Examples:
-    INPUT: "Bonjour, comment ça va ?"
-    OUTPUT: Hello, how are you?
+    INPUT: "Bonjour"
+    OUTPUT: Hello
 
-    INPUT: "Hola amigo"
-    OUTPUT: Hello friend
+    INPUT: "Hola amigo!"
+    OUTPUT: Hello friend!
 
     Now, translate the following input:
     """
@@ -39,6 +39,12 @@ def get_translation(text: str) -> str:
         ],
     )
     return response.message.content.strip()
+    # response = client.generate(
+    #     model=MODEL_NAME,
+    #     prompt=f"{context.strip()}\n\nInput: {text.strip()}\n\nOutput:",
+    # )
+
+    # return response["response"].strip()
 
 def get_language(text: str) -> str:
     """Detect the language name (in English) of a given text."""
@@ -64,6 +70,12 @@ def get_language(text: str) -> str:
         ],
     )
     return response.message.content.strip()
+    # response = client.generate(
+    #     model=MODEL_NAME,
+    #     prompt=f"{context.strip()}\n\nInput: {text.strip()}\n\nOutput:",
+    # )
+
+    # return response["response"].strip()
 
 def translate_content(post: str) -> tuple[bool, str]:
     """
