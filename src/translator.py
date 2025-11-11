@@ -30,18 +30,33 @@ ensure_model(MODEL_NAME)
 # --- Translation functions ---
 def get_translation(text: str) -> str:
     """Translate text into English using the selected Ollama model."""
-    system_prompt = (
-        "You are a translation assistant. Translate any text written in another "
-        "language into natural English. If the text is already in English, return "
-        "it as is. Only return the translation text, nothing else."
-        "Do not include the original text or explanations."
-        "Just reply with the translated sentence."
-    )
+    # system_prompt = (
+    #     "You are a translation assistant. Translate any text written in another "
+    #     "language into natural English. If the text is already in English, return "
+    #     "it as is. Only return the translation text, nothing else."
+    # )
+
+    context = """
+    You are a translation assistant.
+    Translate any text written in another language into natural English.
+    If the text is already in English, return it as is.
+    Do not include the original text or explanations,
+    just reply with the translated sentence.
+
+    Examples:
+    INPUT: "Bonjour, comment ça va ?"
+    OUTPUT: Hello, how are you?
+
+    INPUT: "Hola amigo"
+    OUTPUT: Hello friend
+
+    Now, translate the following input:
+    """
 
     response = client.chat(
         model=MODEL_NAME,
         messages=[
-            {"role": "system", "content": system_prompt},
+            {"role": "system", "content": context},
             {"role": "user", "content": text},
         ],
     )
@@ -49,14 +64,24 @@ def get_translation(text: str) -> str:
 
 def get_language(text: str) -> str:
     """Detect the language name (in English) of a given text."""
-    system_prompt = (
-        "You are a language classifier. Detect the language of the input text "
-        "and reply only with the English name of that language."
-    )
+    context = """
+    You are a language classifier.
+    Detect the language of the input text and reply only with the English name of that language.
+
+    Example:
+    INPUT: Bonjour, je m'appelle Bob
+    OUTPUT: French
+
+    INPUT: Können Sie mir bitte helfen?
+    OUTPUT: German
+
+    INPUT: Hello, how are you?
+    OUTPUT: English
+    """
     response = client.chat(
         model=MODEL_NAME,
         messages=[
-            {"role": "system", "content": system_prompt},
+            {"role": "system", "content": context},
             {"role": "user", "content": text},
         ],
     )
@@ -72,7 +97,7 @@ def translate_content(post: str) -> tuple[bool, str]:
         if not detected_language or "understand" in detected_language:
             raise ValueError("Invalid language detection response")
 
-        if detected_language == "english":
+        if detected_language == "English":
             return True, post
 
         translation = get_translation(post).strip()
